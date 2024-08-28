@@ -6,9 +6,15 @@ body {
   margin: 0;
   padding: 0;
 }
+canvas {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
 div {
   height: 50px;
   width: 50px;
-  background-color: red;
+  background-color: tan;
   border-radius: 20%;
 }

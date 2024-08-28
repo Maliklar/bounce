@@ -1,3 +1,13 @@
+const bodyRec = document.body.getBoundingClientRect();
+
+const canvas = document.createElement("canvas");
+const context = canvas.getContext("2d");
+
+canvas.height = bodyRec.height;
+canvas.width = bodyRec.width;
+
+document.body.appendChild(canvas);
+
 let acc = {
   x: 0,
   y: 0,
@@ -11,13 +21,15 @@ function gravity(div) {
   div.style.top = 300 + "px";
 
   setInterval(() => {
-    const bodyRec = document.body.getBoundingClientRect();
     const rec = div.getBoundingClientRect();
     if (isDragging) {
       acc.x = 0;
       acc.y = 0;
       return;
     }
+    context.fillStyle = "white";
+    context.strokeStyle = "white";
+    context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
     if (acc.y <= 3) acc.y += 0.01;
     if (acc.x > 0) acc.x -= 0.001;
     else if (acc.x < 0) acc.x += 0.001;

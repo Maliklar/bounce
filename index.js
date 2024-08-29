@@ -13,7 +13,7 @@ let acc = {
   y: 0,
 };
 
-const bounce = 1.2;
+const bounce = 1.5;
 function gravity(div) {
   document.body.appendChild(div);
   div.style.position = "absolute";
@@ -32,19 +32,19 @@ function gravity(div) {
     context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
     if (acc.y <= 3) acc.y += 0.01;
     if (acc.x > 0) acc.x -= 0.001;
-    else if (acc.x < 0) acc.x += 0.001;
+    if (acc.x < 0) acc.x += 0.001;
 
     if (bodyRec.bottom <= rec.bottom + acc.y) {
       acc.y = (-1 * acc.y) / bounce;
       return;
     }
     if (bodyRec.left >= rec.left + acc.x) {
-      acc.x = (-1 * acc.x) / 1;
+      acc.x = (-1 * acc.x) / bounce;
       return;
     }
 
     if (bodyRec.right <= rec.right + acc.x) {
-      acc.x = (-1 * acc.x) / 1;
+      acc.x = (-1 * acc.x) / bounce;
       return;
     }
     if (bodyRec.top >= rec.top + acc.y) {

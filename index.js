@@ -8,6 +8,12 @@ canvas.width = bodyRec.width;
 
 document.body.appendChild(canvas);
 
+// GRAV
+
+const grav = document.getElementById("grav");
+// if (!grav) return;
+const gravRec = grav.getBoundingClientRect();
+
 let acc = {
   x: 0,
   y: 0,
@@ -20,6 +26,7 @@ function gravity(div) {
   div.style.left = 300 + "px";
   div.style.top = 300 + "px";
 
+  let once = false;
   setInterval(() => {
     const rec = div.getBoundingClientRect();
     if (isDragging) {
@@ -30,9 +37,19 @@ function gravity(div) {
     context.fillStyle = "white";
     context.strokeStyle = "white";
     context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
-    if (acc.y <= 3) acc.y += 0.01;
+    if (acc.y < 0) acc.y -= 0.001;
+    if (acc.y > 0) acc.y += 0.001;
     if (acc.x > 0) acc.x -= 0.001;
     if (acc.x < 0) acc.x += 0.001;
+
+    const gX = gravRec.x;
+    const gY = gravRec.y;
+
+    if (!once) {
+      acc.x += (gX - rec.x) / 1000;
+      acc.y += (gY - rec.y) / 1000;
+      // once = true;
+    }
 
     if (bodyRec.bottom <= rec.bottom + acc.y) {
       acc.y = (-1 * acc.y) / bounce;
@@ -110,7 +127,8 @@ const avg = { mouseX, mouseY };
 let mQueue = [];
 
 document.onkeydown = (e) => {
-  const fact = 3;
+  const fact = 10;
+  console.log("here");
   if (e.key === "ArrowRight") acc.x = +fact;
   if (e.key === "ArrowLeft") acc.x = -fact;
   if (e.key === "ArrowUp") acc.y = -fact;

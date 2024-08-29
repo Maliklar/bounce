@@ -39,12 +39,12 @@ function gravity(div) {
       return;
     }
     if (bodyRec.left >= rec.left + acc.x) {
-      acc.x = (-1 * acc.x) / bounce;
+      acc.x = (-1 * acc.x) / 1;
       return;
     }
 
     if (bodyRec.right <= rec.right + acc.x) {
-      acc.x = (-1 * acc.x) / bounce;
+      acc.x = (-1 * acc.x) / 1;
       return;
     }
     if (bodyRec.top >= rec.top + acc.y) {

@@ -4,7 +4,6 @@ class Component {
   position: DOMRect;
   force = { x: 0, y: 0 };
   speed = { x: 0, y: 0 };
-  terminalVelocity = 1;
   constructor(tag: string, container?: Container) {
     this.element = document.createElement(tag);
     if (!container) this.container = new Container();
@@ -12,8 +11,8 @@ class Component {
     this.container.element.appendChild(this.element);
     this.element.style.position = "absolute";
     this.element.style.left = "500px";
-    this.element.style.top = "500px";
-    this.force.y = this.container.gravity;
+    this.element.style.top = "10px";
+    this.force.y = -this.container.gravity;
 
     this.loop();
   }
@@ -22,9 +21,19 @@ class Component {
     setInterval(() => {
       this.position = this.element.getBoundingClientRect();
 
-      if (this.speed.y <= this.terminalVelocity) {
-        this.speed.y += this.force.y / 1000;
+      this.speed.y += 0.01;
+      if (this.position.bottom > this.container.position.bottom) {
+        this.speed.y = this.speed.y / 1.1;
+        this.speed.y = -this.speed.y;
+        this.element.style.top = `${this.position.y + this.speed.y}px`;
+
+        return;
       }
+      console.log(this.speed.y);
+      // if (this)
+      // if (this.position.left >= this.container.position.left) return;
+      // if (this.position.right >= this.container.position.right) return;
+      // if (this.position.top >= this.container.position.top) return;
 
       this.element.style.top = `${this.position.y + this.speed.y}px`;
       this.element.style.left = `${this.position.x + this.speed.x}px`;

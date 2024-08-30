@@ -1,3 +1,14 @@
+// class Element {
+//   element;
+//   container;
+//   constructor(tag, container) {
+//     this.element = document.createElement(tag);
+//     if (!container) this.container = document.body;
+//     container.appendChild(this.element);
+//   }
+// }
+
+// const item = new Element("div");
 const bodyRec = document.body.getBoundingClientRect();
 
 const canvas = document.createElement("canvas");
@@ -75,7 +86,7 @@ function gravity(div) {
 }
 
 const div = document.createElement("div");
-gravity(div);
+// gravity(div);
 
 let isDragging = false;
 let diffX = 0;
@@ -134,11 +145,11 @@ document.onkeydown = (e) => {
   if (e.key === "ArrowUp") acc.y += -fact;
   if (e.key === "ArrowDown") acc.y += +fact;
 };
-setInterval(() => {
-  //   const clone = div.cloneNode();
-  //   clone.style.pointerEvents = "none";
-  //   clone.style.backgroundColor = "blue";
-  //   clone.style.height = "5px";
-  //   clone.style.width = "5px";
-  //   document.body.appendChild(clone);
-});
+// setInterval(() => {
+//   //   const clone = div.cloneNode();
+//   //   clone.style.pointerEvents = "none";
+//   //   clone.style.backgroundColor = "blue";
+//   //   clone.style.height = "5px";
+//   //   clone.style.width = "5px";
+//   //   document.body.appendChild(clone);
+// });

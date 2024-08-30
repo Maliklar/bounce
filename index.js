@@ -15,17 +15,16 @@ const grav = document.getElementById("grav");
 const gravRec = grav.getBoundingClientRect();
 
 let acc = {
-  x: 0,
-  y: 0,
+  x: 10,
+  y: 5,
 };
 
 const bounce = 1.5;
 function gravity(div) {
   document.body.appendChild(div);
   div.style.position = "absolute";
-  div.style.left = 300 + "px";
-  div.style.top = 300 + "px";
-
+  div.style.left = 620 + "px";
+  div.style.top = 200 + "px";
   let once = false;
   setInterval(() => {
     const rec = div.getBoundingClientRect();
@@ -127,7 +126,7 @@ const avg = { mouseX, mouseY };
 let mQueue = [];
 
 document.onkeydown = (e) => {
-  const fact = 10;
+  const fact = 5;
   console.log("here");
   if (e.key === "ArrowRight") acc.x += +fact;
   if (e.key === "ArrowLeft") acc.x += -fact;
@@ -135,10 +134,10 @@ document.onkeydown = (e) => {
   if (e.key === "ArrowDown") acc.y += +fact;
 };
 setInterval(() => {
-  //   const clone = div.cloneNode();
-  //   clone.style.pointerEvents = "none";
-  //   clone.style.backgroundColor = "blue";
-  //   clone.style.height = "5px";
-  //   clone.style.width = "5px";
-  //   document.body.appendChild(clone);
+  const clone = div.cloneNode();
+  clone.style.pointerEvents = "none";
+  clone.style.backgroundColor = "white";
+  clone.style.height = "1px";
+  clone.style.width = "1px";
+  document.body.appendChild(clone);
 });

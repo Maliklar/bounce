@@ -31,4 +31,5 @@ div {
   background-color: yellow;
   border-radius: 100%;
   z-index: 10;
+  box-shadow: 0px 0px 20px 20px yellow;
 }

@@ -34,9 +34,9 @@ function gravity(div) {
       acc.y = 0;
       return;
     }
-    context.fillStyle = "white";
-    context.strokeStyle = "white";
-    context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
+    // context.fillStyle = "white";
+    // context.strokeStyle = "white";
+    // context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
     if (acc.y < 0) acc.y -= 0.001;
     if (acc.y > 0) acc.y += 0.001;
     if (acc.x > 0) acc.x -= 0.001;
@@ -129,10 +129,10 @@ let mQueue = [];
 document.onkeydown = (e) => {
   const fact = 10;
   console.log("here");
-  if (e.key === "ArrowRight") acc.x = +fact;
-  if (e.key === "ArrowLeft") acc.x = -fact;
-  if (e.key === "ArrowUp") acc.y = -fact;
-  if (e.key === "ArrowDown") acc.y = +fact;
+  if (e.key === "ArrowRight") acc.x += +fact;
+  if (e.key === "ArrowLeft") acc.x += -fact;
+  if (e.key === "ArrowUp") acc.y += -fact;
+  if (e.key === "ArrowDown") acc.y += +fact;
 };
 setInterval(() => {
   //   const clone = div.cloneNode();

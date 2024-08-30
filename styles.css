@@ -20,8 +20,8 @@ canvas {
 div {
   height: 50px;
   width: 50px;
-  background-color: tan;
-  border-radius: 20%;
+  background-color: lightblue;
+  border-radius: 100%;
 }
 
 #grav {

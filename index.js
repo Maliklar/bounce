@@ -1,7 +1,7 @@
 const bodyRec = document.body.getBoundingClientRect();
 
 const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 
 canvas.height = bodyRec.height;
 canvas.width = bodyRec.width;
@@ -19,6 +19,9 @@ let acc = {
   y: 5,
 };
 
+let prevX = 620;
+let prevY = 200;
+
 const bounce = 1.5;
 function gravity(div) {
   document.body.appendChild(div);
@@ -26,16 +29,27 @@ function gravity(div) {
   div.style.left = 620 + "px";
   div.style.top = 200 + "px";
   let once = false;
+
   setInterval(() => {
     const rec = div.getBoundingClientRect();
+    ctx.beginPath();
+
+    ctx.strokeStyle = `rgb(${rec.x},${rec.y}, ${255})`; // Change to any color you want
+    ctx.lineWidth = 1; // Change the width of the line
+
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(rec.x, rec.y);
+    ctx.stroke();
+    ctx.closePath();
+
+    prevX = rec.x;
+    prevY = rec.y;
     if (isDragging) {
       acc.x = 0;
       acc.y = 0;
       return;
     }
-    // context.fillStyle = "white";
-    // context.strokeStyle = "white";
-    // context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
+
     if (acc.y < 0) acc.y -= 0.001;
     if (acc.y > 0) acc.y += 0.001;
     if (acc.x > 0) acc.x -= 0.001;
@@ -133,11 +147,3 @@ document.onkeydown = (e) => {
   if (e.key === "ArrowUp") acc.y += -fact;
   if (e.key === "ArrowDown") acc.y += +fact;
 };
-setInterval(() => {
-  const clone = div.cloneNode();
-  clone.style.pointerEvents = "none";
-  clone.style.backgroundColor = "white";
-  clone.style.height = "1px";
-  clone.style.width = "1px";
-  document.body.appendChild(clone);
-});

@@ -34,10 +34,6 @@ var Component = /** @class */ (function () {
                 _this.speed.x = -(_this.speed.x / _this.bounce);
             if (cPoints.right)
                 _this.speed.x = -(_this.speed.x / _this.bounce);
-            // if (this)
-            // if (this.position.left >= this.container.position.left) return;
-            // if (this.position.right >= this.container.position.right) return;
-            // if (this.position.top >= this.container.position.top) return;
             _this.element.style.top = "".concat(_this.position.y + _this.speed.y, "px");
             _this.element.style.left = "".concat(_this.position.x + _this.speed.x, "px");
         });
@@ -101,6 +97,7 @@ var Container = /** @class */ (function () {
     function Container(tag) {
         this.mouse = new CurrentMouse();
         this.gravity = 3;
+        this.mouseElementDiff = { x: 0, y: 0 };
         if (!tag)
             this.element = document.body;
         else
@@ -113,9 +110,20 @@ var Container = /** @class */ (function () {
         this.element.onmousemove = function (e) {
             _this.mouse.x = e.clientX;
             _this.mouse.y = e.clientY;
+            if (!_this.mouseElement || !_this.mouse.down)
+                return;
+            _this.mouseElement.style.left = "".concat(_this.mouse.x - _this.mouseElementDiff.x, "px");
+            _this.mouseElement.style.top = "".concat(_this.mouse.y - _this.mouseElementDiff.y, "px");
         };
         this.element.onmousedown = function (e) {
             _this.mouse.down = true;
+            var component = document.elementFromPoint(e.clientX, e.clientY);
+            if (component) {
+                var rec = component.getBoundingClientRect();
+                _this.mouseElementDiff.x = e.clientX - rec.x;
+                _this.mouseElementDiff.y = e.clientY - rec.y;
+                _this.mouseElement = component;
+            }
         };
         this.element.onmouseup = function (e) {
             _this.mouse.down = false;

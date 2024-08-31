@@ -35,11 +35,6 @@ class Component {
       if (cPoints.left) this.speed.x = -(this.speed.x / this.bounce);
       if (cPoints.right) this.speed.x = -(this.speed.x / this.bounce);
 
-      // if (this)
-      // if (this.position.left >= this.container.position.left) return;
-      // if (this.position.right >= this.container.position.right) return;
-      // if (this.position.top >= this.container.position.top) return;
-
       this.element.style.top = `${this.position.y + this.speed.y}px`;
       this.element.style.left = `${this.position.x + this.speed.x}px`;
     });
@@ -110,6 +105,8 @@ class Container {
   public mouse = new CurrentMouse();
   public gravity = 3;
   public position: DOMRect;
+  public mouseElement: HTMLElement;
+  public mouseElementDiff = { x: 0, y: 0 };
 
   constructor(tag?: string) {
     if (!tag) this.element = document.body;
@@ -122,9 +119,27 @@ class Container {
     this.element.onmousemove = (e) => {
       this.mouse.x = e.clientX;
       this.mouse.y = e.clientY;
+
+      if (!this.mouseElement || !this.mouse.down) return;
+      this.mouseElement.style.left = `${
+        this.mouse.x - this.mouseElementDiff.x
+      }px`;
+      this.mouseElement.style.top = `${
+        this.mouse.y - this.mouseElementDiff.y
+      }px`;
     };
     this.element.onmousedown = (e) => {
       this.mouse.down = true;
+      const component = document.elementFromPoint(
+        e.clientX,
+        e.clientY
+      ) as HTMLElement;
+      if (component) {
+        const rec = component.getBoundingClientRect();
+        this.mouseElementDiff.x = e.clientX - rec.x;
+        this.mouseElementDiff.y = e.clientY - rec.y;
+        this.mouseElement = component;
+      }
     };
     this.element.onmouseup = (e) => {
       this.mouse.down = false;

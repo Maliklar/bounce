@@ -27,9 +27,20 @@ class Component {
     setInterval(() => {
       this.position = this.element.getBoundingClientRect();
 
-      this.speed.y += 0.01;
+      // this.speed.y += 0.01;
+      // this.speed.x += 0.01;
 
       const cPoints = this.collision();
+
+      const sX = this.element.getAttribute("speedX");
+      const sY = this.element.getAttribute("speedY");
+      if (sX && sY) {
+        this.speed.y = +sY;
+        this.speed.x = +sX;
+      }
+      this.element.removeAttribute("speedX");
+      this.element.removeAttribute("speedY");
+      console.log(cPoints.left);
       if (cPoints.bottom) this.speed.y = -(this.speed.y / this.bounce);
       if (cPoints.top) this.speed.y = -(this.speed.y / this.bounce);
       if (cPoints.left) this.speed.x = -(this.speed.x / this.bounce);
@@ -46,8 +57,11 @@ class Component {
     for (let i = this.position.left; i < this.position.right; i++) {
       const component = document.elementFromPoint(i, bottom);
       if (component && component.getAttribute("component")) {
-        cPoints.bottom = true;
-        break;
+        const rec = component.getBoundingClientRect();
+        if (this.position.bottom + this.speed.y >= rec.top) {
+          cPoints.bottom = true;
+          break;
+        }
       }
     }
 
@@ -55,26 +69,35 @@ class Component {
     for (let i = this.position.left; i < this.position.right; i++) {
       const component = document.elementFromPoint(i, top);
       if (component && component.getAttribute("component")) {
-        cPoints.top = true;
-        break;
+        const rec = component.getBoundingClientRect();
+        if (this.position.top + this.speed.y <= rec.bottom) {
+          cPoints.top = true;
+          break;
+        }
       }
     }
 
     const left = this.position.left - 1;
     for (let i = this.position.top; i < this.position.bottom; i++) {
-      const component = document.elementFromPoint(i, left);
+      const component = document.elementFromPoint(left, i);
       if (component && component.getAttribute("component")) {
-        cPoints.left = true;
-        break;
+        const rec = component.getBoundingClientRect();
+        if (this.position.left + this.speed.x <= rec.right) {
+          cPoints.left = true;
+          break;
+        }
       }
     }
 
     const right = this.position.right + 1;
     for (let i = this.position.top; i < this.position.bottom; i++) {
-      const component = document.elementFromPoint(i, right);
+      const component = document.elementFromPoint(right, i);
       if (component && component.getAttribute("component")) {
-        cPoints.right = true;
-        break;
+        const rec = component.getBoundingClientRect();
+        if (this.position.right + this.speed.x >= rec.left) {
+          cPoints.right = true;
+          break;
+        }
       }
     }
 
@@ -105,8 +128,9 @@ class Container {
   public mouse = new CurrentMouse();
   public gravity = 3;
   public position: DOMRect;
-  public mouseElement: HTMLElement;
+  public mouseElement: HTMLElement | null;
   public mouseElementDiff = { x: 0, y: 0 };
+  public mQueue: { mouseX: number; mouseY: number }[] = [];
 
   constructor(tag?: string) {
     if (!tag) this.element = document.body;
@@ -119,6 +143,7 @@ class Container {
     this.element.onmousemove = (e) => {
       this.mouse.x = e.clientX;
       this.mouse.y = e.clientY;
+      this.mQueue.push({ mouseX: this.mouse.x, mouseY: this.mouse.y });
 
       if (!this.mouseElement || !this.mouse.down) return;
       this.mouseElement.style.left = `${
@@ -130,11 +155,15 @@ class Container {
     };
     this.element.onmousedown = (e) => {
       this.mouse.down = true;
+      this.mouseElement = null;
+      this.mQueue = [];
+
       const component = document.elementFromPoint(
         e.clientX,
         e.clientY
       ) as HTMLElement;
-      if (component) {
+
+      if (component && component.getAttribute("component")) {
         const rec = component.getBoundingClientRect();
         this.mouseElementDiff.x = e.clientX - rec.x;
         this.mouseElementDiff.y = e.clientY - rec.y;
@@ -142,9 +171,27 @@ class Container {
       }
     };
     this.element.onmouseup = (e) => {
-      this.mouse.down = false;
       this.mouse.downPos.x = e.clientX;
       this.mouse.downPos.y = e.clientY;
+      this.mouse.down = false;
+
+      if (!this.mouseElement) return;
+
+      console.log("here");
+      let ySum = 0;
+      let xSum = 0;
+      for (
+        let i = Math.round(this.mQueue.length / 2);
+        i < this.mQueue.length;
+        i++
+      ) {
+        ySum += this.mQueue[i].mouseY - this.mQueue[i - 1].mouseY;
+        xSum += this.mQueue[i].mouseX - this.mQueue[i - 1].mouseX;
+      }
+      const yAvg = ySum / this.mQueue.length;
+      const xAvg = xSum / this.mQueue.length;
+      this.mouseElement.setAttribute("speedX", xAvg.toString());
+      this.mouseElement.setAttribute("speedY", yAvg.toString());
     };
   }
 }

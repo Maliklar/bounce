@@ -24,8 +24,18 @@ var Component = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             _this.position = _this.element.getBoundingClientRect();
-            _this.speed.y += 0.01;
+            // this.speed.y += 0.01;
+            // this.speed.x += 0.01;
             var cPoints = _this.collision();
+            var sX = _this.element.getAttribute("speedX");
+            var sY = _this.element.getAttribute("speedY");
+            if (sX && sY) {
+                _this.speed.y = +sY;
+                _this.speed.x = +sX;
+            }
+            _this.element.removeAttribute("speedX");
+            _this.element.removeAttribute("speedY");
+            console.log(cPoints.left);
             if (cPoints.bottom)
                 _this.speed.y = -(_this.speed.y / _this.bounce);
             if (cPoints.top)
@@ -44,32 +54,44 @@ var Component = /** @class */ (function () {
         for (var i = this.position.left; i < this.position.right; i++) {
             var component_1 = document.elementFromPoint(i, bottom);
             if (component_1 && component_1.getAttribute("component")) {
-                cPoints.bottom = true;
-                break;
+                var rec = component_1.getBoundingClientRect();
+                if (this.position.bottom + this.speed.y >= rec.top) {
+                    cPoints.bottom = true;
+                    break;
+                }
             }
         }
         var top = this.position.top - 1;
         for (var i = this.position.left; i < this.position.right; i++) {
             var component_2 = document.elementFromPoint(i, top);
             if (component_2 && component_2.getAttribute("component")) {
-                cPoints.top = true;
-                break;
+                var rec = component_2.getBoundingClientRect();
+                if (this.position.top + this.speed.y <= rec.bottom) {
+                    cPoints.top = true;
+                    break;
+                }
             }
         }
         var left = this.position.left - 1;
         for (var i = this.position.top; i < this.position.bottom; i++) {
-            var component_3 = document.elementFromPoint(i, left);
+            var component_3 = document.elementFromPoint(left, i);
             if (component_3 && component_3.getAttribute("component")) {
-                cPoints.left = true;
-                break;
+                var rec = component_3.getBoundingClientRect();
+                if (this.position.left + this.speed.x <= rec.right) {
+                    cPoints.left = true;
+                    break;
+                }
             }
         }
         var right = this.position.right + 1;
         for (var i = this.position.top; i < this.position.bottom; i++) {
-            var component_4 = document.elementFromPoint(i, right);
+            var component_4 = document.elementFromPoint(right, i);
             if (component_4 && component_4.getAttribute("component")) {
-                cPoints.right = true;
-                break;
+                var rec = component_4.getBoundingClientRect();
+                if (this.position.right + this.speed.x >= rec.left) {
+                    cPoints.right = true;
+                    break;
+                }
             }
         }
         if (this.position.bottom + this.speed.y > this.container.position.bottom)
@@ -98,6 +120,7 @@ var Container = /** @class */ (function () {
         this.mouse = new CurrentMouse();
         this.gravity = 3;
         this.mouseElementDiff = { x: 0, y: 0 };
+        this.mQueue = [];
         if (!tag)
             this.element = document.body;
         else
@@ -110,6 +133,7 @@ var Container = /** @class */ (function () {
         this.element.onmousemove = function (e) {
             _this.mouse.x = e.clientX;
             _this.mouse.y = e.clientY;
+            _this.mQueue.push({ mouseX: _this.mouse.x, mouseY: _this.mouse.y });
             if (!_this.mouseElement || !_this.mouse.down)
                 return;
             _this.mouseElement.style.left = "".concat(_this.mouse.x - _this.mouseElementDiff.x, "px");
@@ -117,8 +141,10 @@ var Container = /** @class */ (function () {
         };
         this.element.onmousedown = function (e) {
             _this.mouse.down = true;
+            _this.mouseElement = null;
+            _this.mQueue = [];
             var component = document.elementFromPoint(e.clientX, e.clientY);
-            if (component) {
+            if (component && component.getAttribute("component")) {
                 var rec = component.getBoundingClientRect();
                 _this.mouseElementDiff.x = e.clientX - rec.x;
                 _this.mouseElementDiff.y = e.clientY - rec.y;
@@ -126,9 +152,22 @@ var Container = /** @class */ (function () {
             }
         };
         this.element.onmouseup = function (e) {
-            _this.mouse.down = false;
             _this.mouse.downPos.x = e.clientX;
             _this.mouse.downPos.y = e.clientY;
+            _this.mouse.down = false;
+            if (!_this.mouseElement)
+                return;
+            console.log("here");
+            var ySum = 0;
+            var xSum = 0;
+            for (var i = Math.round(_this.mQueue.length / 2); i < _this.mQueue.length; i++) {
+                ySum += _this.mQueue[i].mouseY - _this.mQueue[i - 1].mouseY;
+                xSum += _this.mQueue[i].mouseX - _this.mQueue[i - 1].mouseX;
+            }
+            var yAvg = ySum / _this.mQueue.length;
+            var xAvg = xSum / _this.mQueue.length;
+            _this.mouseElement.setAttribute("speedX", xAvg.toString());
+            _this.mouseElement.setAttribute("speedY", yAvg.toString());
         };
     };
     return Container;

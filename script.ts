@@ -4,7 +4,7 @@ class Component {
   position: DOMRect;
   force = { x: 0, y: 0 };
   speed = { x: 0, y: 0 };
-  bounce = 2;
+  bounce = 1;
   mouse = {
     diffX: 0,
     diffY: 0,
@@ -27,7 +27,7 @@ class Component {
     setInterval(() => {
       this.position = this.element.getBoundingClientRect();
 
-      this.speed.y += 0.01;
+      // this.speed.y += 0.01;
 
       const cPoints = this.collision();
 
@@ -200,11 +200,19 @@ class Container {
 }
 
 const container = new Container();
-const component = new Component("div", container);
-const component2 = new Component("div", container);
-const component3 = new Component("div", container);
-component3.element.style.left = "1000px";
-component3.element.style.background = "blue";
+// const component = new Component("div", container);
+// const component2 = new Component("div", container);
+// const component3 = new Component("div", container);
+// component3.element.style.left = "1000px";
+// component3.element.style.background = "blue";
 
-component2.element.style.left = "800px";
-component2.element.style.background = "red";
+// component2.element.style.left = "800px";
+// component2.element.style.background = "red";
+
+for (let i = 0; i < 10; i++) {
+  const component = new Component("div", container);
+  component.element.style.left = `${(i + 1) * 100}px`;
+  component.element.style.background = `rgb(${Math.random() * 255}, ${
+    Math.random() * 255
+  }, ${Math.random() * 255})`;
+}

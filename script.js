@@ -2,7 +2,7 @@ var Component = /** @class */ (function () {
     function Component(tag, container) {
         this.force = { x: 0, y: 0 };
         this.speed = { x: 0, y: 0 };
-        this.bounce = 2;
+        this.bounce = 1;
         this.mouse = {
             diffX: 0,
             diffY: 0,
@@ -24,7 +24,7 @@ var Component = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             _this.position = _this.element.getBoundingClientRect();
-            _this.speed.y += 0.01;
+            // this.speed.y += 0.01;
             var cPoints = _this.collision();
             var sX = _this.element.getAttribute("speedX") || 0;
             var sY = _this.element.getAttribute("speedY") || 0;
@@ -50,11 +50,11 @@ var Component = /** @class */ (function () {
         var cPoints = { left: false, right: false, bottom: false, top: false };
         var bottom = this.position.bottom + 1;
         for (var i = this.position.left; i < this.position.right; i++) {
-            var component_1 = document.elementFromPoint(i, bottom);
-            if (component_1 && component_1.getAttribute("component")) {
-                var rec = component_1.getBoundingClientRect();
+            var component = document.elementFromPoint(i, bottom);
+            if (component && component.getAttribute("component")) {
+                var rec = component.getBoundingClientRect();
                 if (this.position.bottom + this.speed.y >= rec.top) {
-                    component_1.setAttribute("speedY", (this.speed.y / 2).toString());
+                    component.setAttribute("speedY", (this.speed.y / 2).toString());
                     cPoints.bottom = true;
                     break;
                 }
@@ -62,11 +62,11 @@ var Component = /** @class */ (function () {
         }
         var top = this.position.top - 1;
         for (var i = this.position.left; i < this.position.right; i++) {
-            var component_2 = document.elementFromPoint(i, top);
-            if (component_2 && component_2.getAttribute("component")) {
-                var rec = component_2.getBoundingClientRect();
+            var component = document.elementFromPoint(i, top);
+            if (component && component.getAttribute("component")) {
+                var rec = component.getBoundingClientRect();
                 if (this.position.top + this.speed.y <= rec.bottom) {
-                    component_2.setAttribute("speedY", (this.speed.y / 2).toString());
+                    component.setAttribute("speedY", (this.speed.y / 2).toString());
                     cPoints.top = true;
                     break;
                 }
@@ -74,11 +74,11 @@ var Component = /** @class */ (function () {
         }
         var left = this.position.left - 1;
         for (var i = this.position.top; i < this.position.bottom; i++) {
-            var component_3 = document.elementFromPoint(left, i);
-            if (component_3 && component_3.getAttribute("component")) {
-                var rec = component_3.getBoundingClientRect();
+            var component = document.elementFromPoint(left, i);
+            if (component && component.getAttribute("component")) {
+                var rec = component.getBoundingClientRect();
                 if (this.position.left + this.speed.x <= rec.right) {
-                    component_3.setAttribute("speedX", (this.speed.x / 2).toString());
+                    component.setAttribute("speedX", (this.speed.x / 2).toString());
                     cPoints.left = true;
                     break;
                 }
@@ -86,11 +86,11 @@ var Component = /** @class */ (function () {
         }
         var right = this.position.right + 1;
         for (var i = this.position.top; i < this.position.bottom; i++) {
-            var component_4 = document.elementFromPoint(right, i);
-            if (component_4 && component_4.getAttribute("component")) {
-                var rec = component_4.getBoundingClientRect();
+            var component = document.elementFromPoint(right, i);
+            if (component && component.getAttribute("component")) {
+                var rec = component.getBoundingClientRect();
                 if (this.position.right + this.speed.x >= rec.left) {
-                    component_4.setAttribute("speedX", (this.speed.x / 2).toString());
+                    component.setAttribute("speedX", (this.speed.x / 2).toString());
                     cPoints.right = true;
                     break;
                 }
@@ -175,10 +175,15 @@ var Container = /** @class */ (function () {
     return Container;
 }());
 var container = new Container();
-var component = new Component("div", container);
-var component2 = new Component("div", container);
-var component3 = new Component("div", container);
-component3.element.style.left = "1000px";
-component3.element.style.background = "blue";
-component2.element.style.left = "800px";
-component2.element.style.background = "red";
+// const component = new Component("div", container);
+// const component2 = new Component("div", container);
+// const component3 = new Component("div", container);
+// component3.element.style.left = "1000px";
+// component3.element.style.background = "blue";
+// component2.element.style.left = "800px";
+// component2.element.style.background = "red";
+for (var i = 0; i < 10; i++) {
+    var component = new Component("div", container);
+    component.element.style.left = "".concat((i + 1) * 100, "px");
+    component.element.style.background = "rgb(".concat(Math.random() * 255, ", ").concat(Math.random() * 255, ", ").concat(Math.random() * 255, ")");
+}

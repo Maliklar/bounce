@@ -2,7 +2,7 @@ var Component = /** @class */ (function () {
     function Component(tag, container) {
         this.force = { x: 0, y: 0 };
         this.speed = { x: 0, y: 0 };
-        this.bounce = 1;
+        this.bounce = 2;
         this.mouse = {
             diffX: 0,
             diffY: 0,
@@ -24,7 +24,7 @@ var Component = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             _this.position = _this.element.getBoundingClientRect();
-            // this.speed.y += 0.01;
+            _this.speed.y += 0.01;
             var cPoints = _this.collision();
             var sX = _this.element.getAttribute("speedX") || 0;
             var sY = _this.element.getAttribute("speedY") || 0;
@@ -182,7 +182,7 @@ var container = new Container();
 // component3.element.style.background = "blue";
 // component2.element.style.left = "800px";
 // component2.element.style.background = "red";
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 5; i++) {
     var component = new Component("div", container);
     component.element.style.left = "".concat((i + 1) * 100, "px");
     component.element.style.background = "rgb(".concat(Math.random() * 255, ", ").concat(Math.random() * 255, ", ").concat(Math.random() * 255, ")");

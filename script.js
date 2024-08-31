@@ -27,15 +27,12 @@ var Component = /** @class */ (function () {
             // this.speed.y += 0.01;
             // this.speed.x += 0.01;
             var cPoints = _this.collision();
-            var sX = _this.element.getAttribute("speedX");
-            var sY = _this.element.getAttribute("speedY");
-            if (sX && sY) {
-                _this.speed.y = +sY;
-                _this.speed.x = +sX;
-            }
-            _this.element.removeAttribute("speedX");
-            _this.element.removeAttribute("speedY");
-            console.log(cPoints.left);
+            var sX = _this.element.getAttribute("speedX") || 0;
+            var sY = _this.element.getAttribute("speedY") || 0;
+            if (sY)
+                _this.speed.y += +sY;
+            if (sX)
+                _this.speed.x += +sX;
             if (cPoints.bottom)
                 _this.speed.y = -(_this.speed.y / _this.bounce);
             if (cPoints.top)
@@ -46,6 +43,8 @@ var Component = /** @class */ (function () {
                 _this.speed.x = -(_this.speed.x / _this.bounce);
             _this.element.style.top = "".concat(_this.position.y + _this.speed.y, "px");
             _this.element.style.left = "".concat(_this.position.x + _this.speed.x, "px");
+            _this.element.removeAttribute("speedX");
+            _this.element.removeAttribute("speedY");
         });
     };
     Component.prototype.collision = function () {
@@ -56,6 +55,7 @@ var Component = /** @class */ (function () {
             if (component_1 && component_1.getAttribute("component")) {
                 var rec = component_1.getBoundingClientRect();
                 if (this.position.bottom + this.speed.y >= rec.top) {
+                    component_1.setAttribute("speedY", (this.speed.y / 2).toString());
                     cPoints.bottom = true;
                     break;
                 }
@@ -67,6 +67,7 @@ var Component = /** @class */ (function () {
             if (component_2 && component_2.getAttribute("component")) {
                 var rec = component_2.getBoundingClientRect();
                 if (this.position.top + this.speed.y <= rec.bottom) {
+                    component_2.setAttribute("speedY", (this.speed.y / 2).toString());
                     cPoints.top = true;
                     break;
                 }
@@ -78,6 +79,7 @@ var Component = /** @class */ (function () {
             if (component_3 && component_3.getAttribute("component")) {
                 var rec = component_3.getBoundingClientRect();
                 if (this.position.left + this.speed.x <= rec.right) {
+                    component_3.setAttribute("speedX", (this.speed.x / 2).toString());
                     cPoints.left = true;
                     break;
                 }
@@ -89,6 +91,7 @@ var Component = /** @class */ (function () {
             if (component_4 && component_4.getAttribute("component")) {
                 var rec = component_4.getBoundingClientRect();
                 if (this.position.right + this.speed.x >= rec.left) {
+                    component_4.setAttribute("speedX", (this.speed.x / 2).toString());
                     cPoints.right = true;
                     break;
                 }
@@ -157,7 +160,6 @@ var Container = /** @class */ (function () {
             _this.mouse.down = false;
             if (!_this.mouseElement)
                 return;
-            console.log("here");
             var ySum = 0;
             var xSum = 0;
             for (var i = Math.round(_this.mQueue.length / 2); i < _this.mQueue.length; i++) {
@@ -168,6 +170,7 @@ var Container = /** @class */ (function () {
             var xAvg = xSum / _this.mQueue.length;
             _this.mouseElement.setAttribute("speedX", xAvg.toString());
             _this.mouseElement.setAttribute("speedY", yAvg.toString());
+            _this.mQueue = [];
         };
     };
     return Container;
@@ -175,5 +178,5 @@ var Container = /** @class */ (function () {
 var container = new Container();
 var component = new Component("div", container);
 var component2 = new Component("div", container);
-component2.element.style.top = "500px";
+component2.element.style.left = "800px";
 component2.element.style.background = "red";

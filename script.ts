@@ -32,15 +32,11 @@ class Component {
 
       const cPoints = this.collision();
 
-      const sX = this.element.getAttribute("speedX");
-      const sY = this.element.getAttribute("speedY");
-      if (sX && sY) {
-        this.speed.y = +sY;
-        this.speed.x = +sX;
-      }
-      this.element.removeAttribute("speedX");
-      this.element.removeAttribute("speedY");
-      console.log(cPoints.left);
+      const sX = this.element.getAttribute("speedX") || 0;
+      const sY = this.element.getAttribute("speedY") || 0;
+      if (sY) this.speed.y += +sY;
+      if (sX) this.speed.x += +sX;
+
       if (cPoints.bottom) this.speed.y = -(this.speed.y / this.bounce);
       if (cPoints.top) this.speed.y = -(this.speed.y / this.bounce);
       if (cPoints.left) this.speed.x = -(this.speed.x / this.bounce);
@@ -48,6 +44,9 @@ class Component {
 
       this.element.style.top = `${this.position.y + this.speed.y}px`;
       this.element.style.left = `${this.position.x + this.speed.x}px`;
+
+      this.element.removeAttribute("speedX");
+      this.element.removeAttribute("speedY");
     });
   }
 
@@ -59,6 +58,7 @@ class Component {
       if (component && component.getAttribute("component")) {
         const rec = component.getBoundingClientRect();
         if (this.position.bottom + this.speed.y >= rec.top) {
+          component.setAttribute("speedY", (this.speed.y / 2).toString());
           cPoints.bottom = true;
           break;
         }
@@ -71,6 +71,7 @@ class Component {
       if (component && component.getAttribute("component")) {
         const rec = component.getBoundingClientRect();
         if (this.position.top + this.speed.y <= rec.bottom) {
+          component.setAttribute("speedY", (this.speed.y / 2).toString());
           cPoints.top = true;
           break;
         }
@@ -83,6 +84,7 @@ class Component {
       if (component && component.getAttribute("component")) {
         const rec = component.getBoundingClientRect();
         if (this.position.left + this.speed.x <= rec.right) {
+          component.setAttribute("speedX", (this.speed.x / 2).toString());
           cPoints.left = true;
           break;
         }
@@ -95,6 +97,7 @@ class Component {
       if (component && component.getAttribute("component")) {
         const rec = component.getBoundingClientRect();
         if (this.position.right + this.speed.x >= rec.left) {
+          component.setAttribute("speedX", (this.speed.x / 2).toString());
           cPoints.right = true;
           break;
         }
@@ -177,7 +180,6 @@ class Container {
 
       if (!this.mouseElement) return;
 
-      console.log("here");
       let ySum = 0;
       let xSum = 0;
       for (
@@ -192,6 +194,7 @@ class Container {
       const xAvg = xSum / this.mQueue.length;
       this.mouseElement.setAttribute("speedX", xAvg.toString());
       this.mouseElement.setAttribute("speedY", yAvg.toString());
+      this.mQueue = [];
     };
   }
 }
@@ -199,5 +202,5 @@ class Container {
 const container = new Container();
 const component = new Component("div", container);
 const component2 = new Component("div", container);
-component2.element.style.top = "500px";
+component2.element.style.left = "800px";
 component2.element.style.background = "red";

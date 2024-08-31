@@ -27,8 +27,7 @@ class Component {
     setInterval(() => {
       this.position = this.element.getBoundingClientRect();
 
-      // this.speed.y += 0.01;
-      // this.speed.x += 0.01;
+      this.speed.y += 0.01;
 
       const cPoints = this.collision();
 
@@ -149,6 +148,7 @@ class Container {
       this.mQueue.push({ mouseX: this.mouse.x, mouseY: this.mouse.y });
 
       if (!this.mouseElement || !this.mouse.down) return;
+
       this.mouseElement.style.left = `${
         this.mouse.x - this.mouseElementDiff.x
       }px`;
@@ -202,5 +202,9 @@ class Container {
 const container = new Container();
 const component = new Component("div", container);
 const component2 = new Component("div", container);
+const component3 = new Component("div", container);
+component3.element.style.left = "1000px";
+component3.element.style.background = "blue";
+
 component2.element.style.left = "800px";
 component2.element.style.background = "red";

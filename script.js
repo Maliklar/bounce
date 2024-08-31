@@ -2,6 +2,11 @@ var Component = /** @class */ (function () {
     function Component(tag, container) {
         this.force = { x: 0, y: 0 };
         this.speed = { x: 0, y: 0 };
+        this.bounce = 2;
+        this.mouse = {
+            diffX: 0,
+            diffY: 0,
+        };
         this.element = document.createElement(tag);
         if (!container)
             this.container = new Container();
@@ -11,6 +16,7 @@ var Component = /** @class */ (function () {
         this.element.style.position = "absolute";
         this.element.style.left = "500px";
         this.element.style.top = "10px";
+        this.element.setAttribute("component", "true");
         this.force.y = -this.container.gravity;
         this.loop();
     }
@@ -19,13 +25,15 @@ var Component = /** @class */ (function () {
         setInterval(function () {
             _this.position = _this.element.getBoundingClientRect();
             _this.speed.y += 0.01;
-            if (_this.position.bottom > _this.container.position.bottom) {
-                _this.speed.y = _this.speed.y / 1.1;
-                _this.speed.y = -_this.speed.y;
-                _this.element.style.top = "".concat(_this.position.y + _this.speed.y, "px");
-                return;
-            }
-            console.log(_this.speed.y);
+            var cPoints = _this.collision();
+            if (cPoints.bottom)
+                _this.speed.y = -(_this.speed.y / _this.bounce);
+            if (cPoints.top)
+                _this.speed.y = -(_this.speed.y / _this.bounce);
+            if (cPoints.left)
+                _this.speed.x = -(_this.speed.x / _this.bounce);
+            if (cPoints.right)
+                _this.speed.x = -(_this.speed.x / _this.bounce);
             // if (this)
             // if (this.position.left >= this.container.position.left) return;
             // if (this.position.right >= this.container.position.right) return;
@@ -33,6 +41,50 @@ var Component = /** @class */ (function () {
             _this.element.style.top = "".concat(_this.position.y + _this.speed.y, "px");
             _this.element.style.left = "".concat(_this.position.x + _this.speed.x, "px");
         });
+    };
+    Component.prototype.collision = function () {
+        var cPoints = { left: false, right: false, bottom: false, top: false };
+        var bottom = this.position.bottom + 1;
+        for (var i = this.position.left; i < this.position.right; i++) {
+            var component_1 = document.elementFromPoint(i, bottom);
+            if (component_1 && component_1.getAttribute("component")) {
+                cPoints.bottom = true;
+                break;
+            }
+        }
+        var top = this.position.top - 1;
+        for (var i = this.position.left; i < this.position.right; i++) {
+            var component_2 = document.elementFromPoint(i, top);
+            if (component_2 && component_2.getAttribute("component")) {
+                cPoints.top = true;
+                break;
+            }
+        }
+        var left = this.position.left - 1;
+        for (var i = this.position.top; i < this.position.bottom; i++) {
+            var component_3 = document.elementFromPoint(i, left);
+            if (component_3 && component_3.getAttribute("component")) {
+                cPoints.left = true;
+                break;
+            }
+        }
+        var right = this.position.right + 1;
+        for (var i = this.position.top; i < this.position.bottom; i++) {
+            var component_4 = document.elementFromPoint(i, right);
+            if (component_4 && component_4.getAttribute("component")) {
+                cPoints.right = true;
+                break;
+            }
+        }
+        if (this.position.bottom + this.speed.y > this.container.position.bottom)
+            cPoints.bottom = true;
+        if (this.position.top + this.speed.y < this.container.position.top)
+            cPoints.top = true;
+        if (this.position.left + this.speed.x < this.container.position.left)
+            cPoints.left = true;
+        if (this.position.right + this.speed.x > this.container.position.right)
+            cPoints.right = true;
+        return cPoints;
     };
     return Component;
 }());
@@ -73,4 +125,8 @@ var Container = /** @class */ (function () {
     };
     return Container;
 }());
-var component = new Component("div");
+var container = new Container();
+var component = new Component("div", container);
+var component2 = new Component("div", container);
+component2.element.style.top = "500px";
+component2.element.style.background = "red";

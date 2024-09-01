@@ -209,7 +209,7 @@ const container = new Container();
 // component2.element.style.left = "800px";
 // component2.element.style.background = "red";
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 8; i++) {
   const component = new Component("div", container);
   component.element.style.left = `${(i + 1) * 100}px`;
   component.element.style.background = `rgb(${Math.random() * 255}, ${

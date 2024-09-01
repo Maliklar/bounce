@@ -1,3 +1,14 @@
+// class Element {
+//   element;
+//   container;
+//   constructor(tag, container) {
+//     this.element = document.createElement(tag);
+//     if (!container) this.container = document.body;
+//     container.appendChild(this.element);
+//   }
+// }
+
+// const item = new Element("div");
 const bodyRec = document.body.getBoundingClientRect();
 
 const canvas = document.createElement("canvas");
@@ -7,6 +18,12 @@ canvas.height = bodyRec.height;
 canvas.width = bodyRec.width;
 
 document.body.appendChild(canvas);
+
+// GRAV
+
+const grav = document.getElementById("grav");
+// if (!grav) return;
+const gravRec = grav.getBoundingClientRect();
 
 let acc = {
   x: 0,
@@ -20,6 +37,7 @@ function gravity(div) {
   div.style.left = 300 + "px";
   div.style.top = 300 + "px";
 
+  let once = false;
   setInterval(() => {
     const rec = div.getBoundingClientRect();
     if (isDragging) {
@@ -27,12 +45,22 @@ function gravity(div) {
       acc.y = 0;
       return;
     }
-    context.fillStyle = "white";
-    context.strokeStyle = "white";
-    context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
-    if (acc.y <= 3) acc.y += 0.01;
+    // context.fillStyle = "white";
+    // context.strokeStyle = "white";
+    // context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
+    if (acc.y < 0) acc.y -= 0.001;
+    if (acc.y > 0) acc.y += 0.001;
     if (acc.x > 0) acc.x -= 0.001;
     if (acc.x < 0) acc.x += 0.001;
+
+    const gX = gravRec.x;
+    const gY = gravRec.y;
+
+    if (!once) {
+      acc.x += (gX - rec.x) / 1000;
+      acc.y += (gY - rec.y) / 1000;
+      // once = true;
+    }
 
     if (bodyRec.bottom <= rec.bottom + acc.y) {
       acc.y = (-1 * acc.y) / bounce;
@@ -58,7 +86,7 @@ function gravity(div) {
 }
 
 const div = document.createElement("div");
-gravity(div);
+// gravity(div);
 
 let isDragging = false;
 let diffX = 0;
@@ -110,17 +138,18 @@ const avg = { mouseX, mouseY };
 let mQueue = [];
 
 document.onkeydown = (e) => {
-  const fact = 3;
-  if (e.key === "ArrowRight") acc.x = +fact;
-  if (e.key === "ArrowLeft") acc.x = -fact;
-  if (e.key === "ArrowUp") acc.y = -fact;
-  if (e.key === "ArrowDown") acc.y = +fact;
+  const fact = 10;
+  console.log("here");
+  if (e.key === "ArrowRight") acc.x += +fact;
+  if (e.key === "ArrowLeft") acc.x += -fact;
+  if (e.key === "ArrowUp") acc.y += -fact;
+  if (e.key === "ArrowDown") acc.y += +fact;
 };
-setInterval(() => {
-  //   const clone = div.cloneNode();
-  //   clone.style.pointerEvents = "none";
-  //   clone.style.backgroundColor = "blue";
-  //   clone.style.height = "5px";
-  //   clone.style.width = "5px";
-  //   document.body.appendChild(clone);
-});
+// setInterval(() => {
+//   //   const clone = div.cloneNode();
+//   //   clone.style.pointerEvents = "none";
+//   //   clone.style.backgroundColor = "blue";
+//   //   clone.style.height = "5px";
+//   //   clone.style.width = "5px";
+//   //   document.body.appendChild(clone);
+// });

@@ -5,9 +5,14 @@ body {
   background-color: black;
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 canvas {
   position: absolute;
+  top: 0;
+  left: 0;
   margin: 0;
   padding: 0;
   background-color: black;
@@ -16,5 +21,14 @@ div {
   height: 50px;
   width: 50px;
   background-color: tan;
-  border-radius: 20%;
+  border-radius: 100%;
+}
+
+#grav {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  background-color: yellow;
+  border-radius: 100%;
+  z-index: 10;
 }

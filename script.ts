@@ -63,7 +63,7 @@ class Component {
         }
       }
     }
-
+    // asdf
     const top = this.position.top - 1;
     for (let i = this.position.left; i < this.position.right; i++) {
       const component = document.elementFromPoint(i, top);

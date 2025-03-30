@@ -1,3 +1,11 @@
+var gravityButton = document.getElementById("gravity-button");
+console.log(gravityButton);
+gravityButton === null || gravityButton === void 0 ? void 0 : gravityButton.onclick = function () {
+    var script = document.createElement("script");
+    script.src = "./gravity-location.js";
+    document.body.appendChild(script);
+    console.log("here");
+};
 var Component = /** @class */ (function () {
     function Component(tag, container) {
         this.force = { x: 0, y: 0 };
@@ -182,7 +190,7 @@ var container = new Container();
 // component3.element.style.background = "blue";
 // component2.element.style.left = "800px";
 // component2.element.style.background = "red";
-for (var i = 0; i < 5; i++) {
+for (var i = 0; i < 3; i++) {
     var component = new Component("div", container);
     component.element.style.left = "".concat((i + 1) * 100, "px");
     component.element.style.background = "rgb(".concat(Math.random() * 255, ", ").concat(Math.random() * 255, ", ").concat(Math.random() * 255, ")");

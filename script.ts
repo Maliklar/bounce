@@ -1,3 +1,10 @@
+const gravityButton = document.getElementById("gravity-button");
+gravityButton?.onclick = () => {
+  const script = document.createElement("script");
+  script.src = "./gravity-location.js";
+  document.body.appendChild(script);
+};
+
 class Component {
   element: HTMLElement;
   container: Container;
@@ -209,7 +216,7 @@ const container = new Container();
 // component2.element.style.left = "800px";
 // component2.element.style.background = "red";
 
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 3; i++) {
   const component = new Component("div", container);
   component.element.style.left = `${(i + 1) * 100}px`;
   component.element.style.background = `rgb(${Math.random() * 255}, ${

@@ -1,19 +1,7 @@
-// class Element {
-//   element;
-//   container;
-//   constructor(tag, container) {
-//     this.element = document.createElement(tag);
-//     if (!container) this.container = document.body;
-//     container.appendChild(this.element);
-//   }
-// }
-
-// const item = new Element("div");
-
 const bodyRec = document.body.getBoundingClientRect();
 
 const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 
 canvas.height = bodyRec.height;
 canvas.width = bodyRec.width;
@@ -27,28 +15,41 @@ const grav = document.getElementById("grav");
 const gravRec = grav.getBoundingClientRect();
 
 let acc = {
-  x: 0,
-  y: 0,
+  x: 10,
+  y: 5,
 };
+
+let prevX = 620;
+let prevY = 200;
 
 const bounce = 1.5;
 function gravity(div) {
   document.body.appendChild(div);
   div.style.position = "absolute";
-  div.style.left = 300 + "px";
-  div.style.top = 300 + "px";
-
+  div.style.left = 620 + "px";
+  div.style.top = 200 + "px";
   let once = false;
+
   setInterval(() => {
     const rec = div.getBoundingClientRect();
+    ctx.beginPath();
+
+    ctx.strokeStyle = `rgb(${rec.x},${rec.y}, ${255})`; // Change to any color you want
+    ctx.lineWidth = 1; // Change the width of the line
+
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(rec.x, rec.y);
+    ctx.stroke();
+    ctx.closePath();
+
+    prevX = rec.x;
+    prevY = rec.y;
     if (isDragging) {
       acc.x = 0;
       acc.y = 0;
       return;
     }
-    // context.fillStyle = "white";
-    // context.strokeStyle = "white";
-    // context.fillRect(rec.x + 20, rec.y + 20, 5, 5);
+
     if (acc.y < 0) acc.y -= 0.001;
     if (acc.y > 0) acc.y += 0.001;
     if (acc.x > 0) acc.x -= 0.001;
@@ -87,7 +88,7 @@ function gravity(div) {
 }
 
 const div = document.createElement("div");
-// gravity(div);
+gravity(div);
 
 let isDragging = false;
 let diffX = 0;
@@ -139,18 +140,10 @@ const avg = { mouseX, mouseY };
 let mQueue = [];
 
 document.onkeydown = (e) => {
-  const fact = 10;
+  const fact = 5;
   console.log("here");
   if (e.key === "ArrowRight") acc.x += +fact;
   if (e.key === "ArrowLeft") acc.x += -fact;
   if (e.key === "ArrowUp") acc.y += -fact;
   if (e.key === "ArrowDown") acc.y += +fact;
 };
-// setInterval(() => {
-//   //   const clone = div.cloneNode();
-//   //   clone.style.pointerEvents = "none";
-//   //   clone.style.backgroundColor = "blue";
-//   //   clone.style.height = "5px";
-//   //   clone.style.width = "5px";
-//   //   document.body.appendChild(clone);
-// });

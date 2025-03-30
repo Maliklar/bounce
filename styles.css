@@ -9,6 +9,12 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+#gravity-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 canvas {
   position: absolute;
   top: 0;

@@ -9,6 +9,14 @@
 // }
 
 // const item = new Element("div");
+
+const gravityButton = document.getElementById("gravity-button");
+
+gravityButton.onclick = ()=>{
+  
+}
+
+
 const bodyRec = document.body.getBoundingClientRect();
 
 const canvas = document.createElement("canvas");

@@ -1,6 +1,8 @@
 # Bounce: Physics for HTML Elements
 
-A simple JavaScript function that applies physics effects to an HTML element.
+A work-in-progress JavaScript function that applies physics effects to an HTML element.
+
+[Check the Bounce demo](https://maliklar.github.io/bounce/)
 
 ## Features
 - Apply gravity, collision, and other physics-based interactions to HTML elements.

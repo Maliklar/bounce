@@ -1,10 +1,8 @@
 var gravityButton = document.getElementById("gravity-button");
-console.log(gravityButton);
 gravityButton === null || gravityButton === void 0 ? void 0 : gravityButton.onclick = function () {
     var script = document.createElement("script");
     script.src = "./gravity-location.js";
     document.body.appendChild(script);
-    console.log("here");
 };
 var Component = /** @class */ (function () {
     function Component(tag, container) {
